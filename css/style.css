@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;500;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050a0f;
+  --surface: #0a1520;
+  --border: #0d2a40;
+  --accent: #00e5ff;
+  --accent2: #ff3d71;
+  --accent3: #39ff14;
+  --dim: #1a3a55;
+  --text: #c8e6f5;
+  --mono: 'Share Tech Mono', monospace;
+  --sans: 'Rajdhani', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto auto;
+  height: 100dvh;
+}
+
+/* Header */
+header {
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #081520 0%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header h1 {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent3);
+  box-shadow: 0 0 8px var(--accent3);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Stats */
+.stats {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+#stats-top { grid-template-columns: repeat(3, 1fr); }
+#stats-bottom { grid-template-columns: repeat(4, 1fr); }
+
+.stat {
+  background: var(--surface);
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: #4a7a9b;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+#stats-bottom .stat-value { font-size: 18px; }
+
+.stat-unit {
+  font-size: 9px;
+  color: #4a7a9b;
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+
+.v-total { color: var(--accent); text-shadow: 0 0 12px var(--accent); }
+.v-rate  { color: var(--accent3); text-shadow: 0 0 12px var(--accent3); }
+.v-multi { color: var(--accent2); text-shadow: 0 0 12px var(--accent2); }
+.v-dim   { color: #a0cfea; }
+
+/* Touch zone */
+#zone {
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+  background:
+    radial-gradient(ellipse at 50% 0%, #0a2035 0%, transparent 60%),
+    var(--bg);
+}
+
+#zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.zone-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+.zone-hint.hidden { opacity: 0; }
+
+.zone-hint svg {
+  opacity: 0.2;
+  margin-bottom: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+.zone-hint p {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #2a5a7a;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Ripple & dot */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-anim 0.7s ease-out forwards;
+}
+
+@keyframes ripple-anim {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+}
+
+.touch-dot {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: dot-anim 0.5s ease-out forwards;
+}
+
+@keyframes dot-anim {
+  0%   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+}
+
+/* Finger pips */
+#finger-bar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.finger-pip {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--accent2);
+  transition: background 0.1s;
+}
+
+.finger-pip.active {
+  background: var(--accent2);
+  box-shadow: 0 0 6px var(--accent2);
+}
+
+/* Speed bar */
+#speed-bar-wrap {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  height: 3px;
+  background: var(--dim);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+#speed-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent3);
+  box-shadow: 0 0 6px var(--accent3);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Log panel */
+#log-panel {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  height: 110px;
+  overflow-y: auto;
+  padding: 6px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dim) transparent;
+}
+
+.log-entry {
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.8;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #0a1a28;
+  padding: 2px 0;
+}
+
+.log-entry .ts     { color: #1a4a6a; min-width: 60px; }
+.log-entry .ev     { color: var(--accent); }
+.log-entry .detail { color: #5a9abf; }
+
+/* Footer */
+footer {
+  padding: 8px 16px;
+  display: flex;
+  gap: 8px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+button {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: #4a7a9b;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+button:active { background: var(--dim); color: var(--accent); }
+button.danger { border-color: #3a1020; color: #6a2030; }
+button.danger:active { background: #2a0a18; color: var(--accent2); }
